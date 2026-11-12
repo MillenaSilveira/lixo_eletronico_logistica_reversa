@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lixo Eletrônico e Logística Reversa — FACECA</title>
+<meta name="description" content="Ponto de Entrega Voluntária de resíduos eletroeletrônicos na FACECA, Varginha. Saiba o que descartar, onde fica e como funciona a logística reversa.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  /* ===========================================================
+     VARIÁVEIS DE TEMA (design tokens)
+     Todas as cores, fontes e o raio de borda do site ficam
+     centralizados aqui. Trocar um valor aqui reflete em
+     todo o site, sem precisar mexer em cada seção.
+     =========================================================== */
+  :root{
+    --green: #4CAF50;        /* verde principal: botões, ícones, destaques */
+    --green-dark: #2E7D32;   /* verde mais escuro: textos de destaque (kicker, números) */
+    --green-deep: #1B4D1E;   /* verde bem escuro: fundo da faixa de CTA e avatares */
+    --ink: #121212;          /* "quase preto": fundo do menu, hero e cards escuros */
+    --cream: #F1F0EB;        /* fundo geral da página (modo claro) */
+    --surface: #FFFFFF;      /* fundo dos cards/caixas brancas */
+    --line: #e3e1d9;         /* cor das bordas sutis dos cards */
+    --line-soft: #c9c6ba;    /* borda tracejada do aviso "não aceitamos" */
+    --text-dark: #17201A;    /* cor do texto principal */
+    --text-muted: #5b6660;   /* cor do texto secundário (descrições, legendas) */
+    --tag-bg: #e7f3e7;       /* fundo das badges/selos verdes claros */
+    --radius: 18px;          /* raio de borda padrão dos cards e caixas */
+    --font-display: 'Poppins', system-ui, -apple-system, 'Segoe UI', sans-serif; /* títulos */
+    --font-body: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;      /* texto corrido */
+  }
+  /* Modo escuro automático: se o sistema do visitante estiver em
+     dark mode, e a página não tiver sido forçada para "light"
+     (data-theme="light"), as variáveis acima são substituídas. */
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --cream: #0e110e;
+      --surface: #171b17;
+      --line: #28302a;
+      --line-soft: #3a443c;
+      --text-dark: #edf1ed;
+      --text-muted: #9aa79e;
+      --green-dark: #7fc883;
+      --tag-bg: #1e2a1e;
+    }
+  }
+  /* Permite forçar o modo escuro manualmente (ex: um botão de tema
+     no futuro) adicionando data-theme="dark" na tag <html>. */
+  :root[data-theme="dark"]{
+    --cream: #0e110e;
+    --surface: #171b17;
+    --line: #28302a;
+    --line-soft: #3a443c;
+    --text-dark: #edf1ed;
+    --text-muted: #9aa79e;
+    --green-dark: #7fc883;
+    --tag-bg: #1e2a1e;
+  }
+ 
+  /* ===========================================================
+     RESET BÁSICO E ESTILOS GLOBAIS
+     =========================================================== */
+  *{box-sizing:border-box; margin:0; padding:0;} /* remove margens padrão do navegador */
+  html{scroll-behavior:smooth; scroll-padding-top:78px;} /* rolagem suave nos links "#" e espaço p/ o menu fixo não cobrir o título */
+  body{
+    font-family: var(--font-body);
+    background: var(--cream);
+    color: var(--text-dark);
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit; text-decoration:none;} /* links herdam a cor do texto ao redor, sem sublinhado */
+  img, svg{display:block; max-width:100%;}
+  .wrap{max-width:1120px; margin:0 auto; padding:0 32px;} /* container central usado em várias seções */
+  :focus-visible{outline:3px solid var(--green); outline-offset:3px; border-radius:4px;} /* contorno visível ao navegar com Tab (acessibilidade) */
+  .skip{
+    position:absolute; left:-9999px; top:0; background:var(--green); color:#fff;
+    padding:12px 18px; z-index:100; font-family:var(--font-display); font-weight:700;
+  }
+  .skip:focus{left:12px; top:12px;} /* o link "pular para o conteúdo" só aparece quando recebe foco pelo teclado */
+ 
+  /* ===========================================================
+     MENU DE NAVEGAÇÃO (topo fixo)
+     =========================================================== */
+  nav.topnav{background:var(--ink); position:sticky; top:0; z-index:50;}
+  nav.topnav .inner{
+    max-width:1120px; margin:0 auto; padding:16px 32px;
+    display:flex; align-items:center; justify-content:space-between; gap:16px;
+  }
+  .brand{display:flex; align-items:center; gap:10px;}
+  .brand svg{width:30px; height:30px; flex-shrink:0;}
+  .brand span{
+    font-family:var(--font-display); font-weight:800; color:#fff;
+    font-size:14px; text-transform:uppercase; letter-spacing:-0.01em;
+  }
+  .brand span em{color:var(--green); font-style:normal;}
+  .navlinks{display:flex; gap:26px;}
+  .navlinks a{
+    font-family:var(--font-display); font-size:12px; font-weight:600;
+    color:#c9d1c9; text-transform:uppercase; letter-spacing:.05em; padding:4px 0;
+    border-bottom:2px solid transparent;
+  }
+  .navlinks a:hover, .navlinks a.active{color:#fff; border-bottom-color:var(--green);}
+  .nav-cta{
+    font-family:var(--font-display); font-weight:700; text-transform:uppercase; font-size:11.5px;
+    letter-spacing:.03em; background:var(--green); color:#fff;
+    border:none; border-radius:10px; padding:10px 18px; white-space:nowrap;
+  }
+  .navtoggle{
+    display:none; /* só aparece no mobile, veja media query lá embaixo */
+    background:transparent; border:1px solid #3f4a3f; border-radius:10px;
+    padding:8px 10px; cursor:pointer;
+  }
+  .navtoggle svg{width:20px; height:20px; stroke:#fff; fill:none; stroke-width:2;}
+  .mobilemenu{display:none; background:#171c17; border-top:1px solid #2a332a;} /* painel do menu mobile, escondido por padrão */
+  .mobilemenu.open{display:block;} /* classe adicionada via JS quando o botão hambúrguer é clicado */
+  .mobilemenu a{
+    display:block; padding:14px 32px; border-bottom:1px solid #222a22;
+    font-family:var(--font-display); font-size:12.5px; font-weight:600;
+    text-transform:uppercase; letter-spacing:.05em; color:#c9d1c9;
+  }
+ 
+  /* ===========================================================
+     HERO (cabeçalho de destaque, primeira coisa que o visitante vê)
+     =========================================================== */
+  header.hero{
+    background:var(--ink); color:#fff; padding:76px 32px 92px;
+    text-align:center; position:relative; overflow:hidden;
+  }
+  header.hero::after{
+    /* círculo decorativo no canto superior direito, feito só com CSS (sem imagem) */
+    content:""; position:absolute; right:-120px; top:-120px; width:360px; height:360px;
+    border-radius:50%; border:2px solid rgba(76,175,80,.18);
+  }
+  header.hero::before{
+    /* segundo círculo decorativo, no canto inferior esquerdo */
+    content:""; position:absolute; left:-90px; bottom:-140px; width:280px; height:280px;
+    border-radius:50%; border:2px solid rgba(76,175,80,.10);
+  }
+  .hero-inner{position:relative; z-index:1;} /* garante que o texto fique acima dos círculos decorativos */
+  header.hero .eyebrow{
+    font-family:var(--font-display); font-weight:600; letter-spacing:.22em;
+    text-transform:uppercase; font-size:12px; color:var(--green); margin-bottom:18px;
+  }
+  header.hero h1{
+    font-family:var(--font-display); font-weight:800;
+    font-size:clamp(32px, 5vw, 56px); text-transform:uppercase;
+    line-height:1.05; letter-spacing:-0.01em;
+  }
+  header.hero h1 span{color:var(--green);}
+  header.hero p.lede{max-width:600px; margin:22px auto 0; color:#cfd4cf; font-size:15.5px;}
+  .hero-actions{display:flex; gap:14px; justify-content:center; margin-top:32px; flex-wrap:wrap;}
+  .btn{
+    font-family:var(--font-display); font-weight:700; text-transform:uppercase; font-size:12.5px;
+    letter-spacing:.03em; background:var(--green); color:#fff; border:none; border-radius:10px;
+    padding:14px 24px; display:inline-block; cursor:pointer; transition:background .18s ease;
+  }
+  .btn:hover{background:var(--green-dark); color:#fff;}
+  .btn.outline{background:transparent; border:2px solid var(--green); color:var(--green-dark);} /* variação "vazada", usada em fundos claros */
+  .btn.outline:hover{background:var(--green); color:#fff;}
+  header.hero .btn.outline{color:#fff; border-color:#3f4a3f;} /* ajuste de contraste: no hero o fundo é escuro */
+  header.hero .btn.outline:hover{background:#1e2a1e; border-color:var(--green);}
+ 
+  .hero-stats{display:flex; justify-content:center; gap:56px; margin-top:56px; flex-wrap:wrap;}
+  .hero-stat b{display:block; font-family:var(--font-display); font-weight:800; font-size:32px; color:var(--green);}
+  .hero-stat span{font-size:11.5px; color:#a9b3a9; text-transform:uppercase; letter-spacing:.08em;}
+ 
+  /* ===========================================================
+     ESTRUTURA COMUM DAS SEÇÕES
+     Todo <section> do site (Problema, Processo, Materiais, etc.)
+     reaproveita este mesmo conjunto de classes: .kicker (rótulo
+     numerado), <h2> (título), .desc (texto de apoio) e hr.rule
+     (tracinho verde). Isso mantém o espaçamento e a tipografia
+     consistentes sem repetir CSS em cada seção.
+     =========================================================== */
+  section{padding-top:88px;}
+  section .kicker{
+    font-family:var(--font-display); font-weight:700; color:var(--green-dark);
+    text-transform:uppercase; letter-spacing:.14em; font-size:12px; margin-bottom:10px;
+  }
+  section h2{
+    font-family:var(--font-display); font-weight:800; font-size:clamp(24px, 3.4vw, 30px);
+    text-transform:uppercase; margin-bottom:8px; letter-spacing:-0.01em;
+  }
+  section .desc{color:var(--text-muted); max-width:640px; font-size:14.5px; margin-bottom:40px;}
+  hr.rule{border:none; height:2px; width:56px; background:var(--green); margin:14px 0 30px;}
+ 
+  /* --- 01 · Diagnóstico: grade de estatísticas (4 colunas) --- */
+  .stat-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:16px;}
+  .stat-card{background:var(--surface); border-radius:var(--radius); border:1px solid var(--line); padding:28px 22px;}
+  .stat-card b{display:block; font-family:var(--font-display); font-weight:800; font-size:34px; color:var(--green-dark);}
+  .stat-card p{font-size:13px; color:var(--text-muted); margin-top:8px;}
+  .source-note{margin-top:18px; font-size:12px; color:var(--text-muted);}
+ 
+  /* --- 02 · Processo: os 4 passos ligados por setas --- */
+  .cycle-note{
+    background:var(--surface); border-radius:var(--radius); padding:30px; border:1px solid var(--line);
+    display:flex; gap:20px; align-items:flex-start; flex-wrap:wrap; justify-content:center;
+  }
+  .cycle-step{display:flex; flex-direction:column; align-items:center; gap:10px; flex:1; min-width:120px;}
+  .cycle-step .dot{
+    width:56px; height:56px; border-radius:50%; background:var(--cream);
+    display:flex; align-items:center; justify-content:center; border:2px solid var(--green);
+  }
+  .cycle-step .dot svg{width:24px; height:24px; stroke:var(--green); fill:none; stroke-width:1.7;}
+  .cycle-step strong{
+    font-family:var(--font-display); font-size:11px; font-weight:700; text-transform:uppercase;
+    text-align:center; color:var(--text-dark); letter-spacing:.03em;
+  }
+  .cycle-step small{font-size:12px; color:var(--text-muted); text-align:center; max-width:150px;}
+  .arrow{color:var(--green); font-size:20px; padding-top:16px;} /* seta "→" entre os passos; escondida no mobile */
+ 
+  /* --- 03 · Materiais: ícones circulares do que é aceito --- */
+  .icon-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:16px;}
+  .icon-card{
+    background:var(--ink); border-radius:50%; aspect-ratio:1;
+    display:flex; align-items:center; justify-content:center; flex-direction:column; gap:10px;
+    color:#fff; padding:14px; text-align:center;
+  }
+  .icon-card svg{width:34px; height:34px; stroke:var(--green); fill:none; stroke-width:1.6;}
+  .icon-card span{font-family:var(--font-display); font-size:10px; letter-spacing:.05em; text-transform:uppercase;}
+  .not-accepted{
+    margin-top:22px; font-size:13.5px; color:var(--text-muted);
+    background:var(--surface); border:1px dashed var(--line-soft); border-radius:12px; padding:16px 18px;
+  }
+  .not-accepted strong{color:var(--text-dark);}
+ 
+  /* --- 04 · Onde Fica: os dois cards lado a lado (endereço + horário) --- */
+  .comp-grid{display:grid; grid-template-columns:1fr 1fr; gap:20px; align-items:start;}
+  .card{border-radius:var(--radius); padding:34px;}
+  .card.light{background:var(--surface); border:1px solid var(--line);} /* card claro: endereço */
+  .card.dark{background:var(--ink); color:#fff;} /* card escuro: horário de funcionamento */
+  .card h3{font-family:var(--font-display); font-weight:800; text-transform:uppercase; font-size:20px; margin-bottom:6px;}
+  .card.dark h3 .accent{color:var(--green);}
+  .card .card-sub{font-size:13.5px; color:var(--text-muted); margin-bottom:6px;}
+  .card.dark .card-sub{color:#c9d1c9;}
+  .checklist{list-style:none; margin-top:16px; display:flex; flex-direction:column; gap:10px;}
+  .checklist li{display:flex; align-items:flex-start; gap:10px; font-size:13.5px;}
+  .checklist svg{width:16px; height:16px; stroke:var(--green); fill:none; flex-shrink:0; margin-top:4px; stroke-width:2;}
+  .badge-row{display:flex; flex-wrap:wrap; gap:8px; margin:18px 0;}
+  .badge{
+    font-family:var(--font-body); font-size:12px; font-weight:600; color:var(--green-dark);
+    background:var(--tag-bg); padding:6px 12px; border-radius:20px;
+  }
+  .card.dark .badge{background:#1e2a1e; color:#8fd18f;}
+  /* tabela de horários dentro do card escuro */
+  .hours{width:100%; border-collapse:collapse; margin-top:16px; font-size:13.5px;}
+  .hours tr{border-bottom:1px solid #2a332a;}
+  .hours tr:last-child{border-bottom:none;}
+  .hours th, .hours td{padding:10px 0; text-align:left; font-weight:400; color:#c9d1c9;}
+  .hours th{font-family:var(--font-display); font-weight:600; color:#fff;} /* nome do dia */
+  .hours td{text-align:right; color:var(--green);} /* horário, alinhado à direita */
+  .hours tr.closed td{color:#8a938a;} /* sábado/domingo em cinza, para indicar "fechado" visualmente */
+ 
+  /* --- 05 · Metas: os 3 círculos com números --- */
+  .goal-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:20px;}
+  .goal-card{
+    background:var(--surface); border-radius:var(--radius); border:1px solid var(--line);
+    padding:30px; text-align:center;
+  }
+  .goal-card .ring{
+    width:76px; height:76px; border-radius:50%; border:3px solid var(--green);
+    display:flex; align-items:center; justify-content:center; margin:0 auto 18px;
+    font-family:var(--font-display); font-weight:800; font-size:15px; color:var(--green-dark);
+  }
+  .goal-card h3{font-family:var(--font-display); font-weight:700; text-transform:uppercase; font-size:14px; margin-bottom:8px;}
+  .goal-card p{font-size:13px; color:var(--text-muted);}
+ 
+  /* Observação: este bloco de estilos era usado pela seção de
+     Cronograma, que foi removida do site. Os estilos ficaram
+     aqui sem uso — podem ser apagados com segurança se quiser
+     limpar o CSS, ou reaproveitados caso o cronograma volte. */
+  .timeline{list-style:none; border-left:2px solid var(--line); margin-left:8px;}
+  .timeline li{position:relative; padding:0 0 26px 26px;}
+  .timeline li::before{
+    content:""; position:absolute; left:-7px; top:5px; width:12px; height:12px;
+    border-radius:50%; background:var(--cream); border:2px solid var(--green);
+  }
+  .timeline li.done::before{background:var(--green);}
+  .timeline .when{
+    font-family:var(--font-display); font-size:11px; font-weight:700; letter-spacing:.08em;
+    text-transform:uppercase; color:var(--green-dark);
+  }
+  .timeline h3{font-family:var(--font-display); font-size:15px; font-weight:700; margin:2px 0 3px;}
+  .timeline p{font-size:13px; color:var(--text-muted);}
+ 
+  /* --- 06 · Time: cards dos integrantes do grupo --- */
+  .team-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:18px;}
+  .team-card{background:var(--surface); border-radius:var(--radius); border:1px solid var(--line); padding:26px;}
+  .team-avatar{
+    width:46px; height:46px; border-radius:50%; background:var(--green-deep); color:#fff;
+    display:flex; align-items:center; justify-content:center; font-family:var(--font-display);
+    font-weight:700; font-size:15px; margin-bottom:16px;
+  }
+  .team-card h3{font-family:var(--font-display); font-weight:700; font-size:14.5px; margin-bottom:6px;}
+  .team-course{
+    display:inline-block; font-size:10.5px; font-weight:600; color:var(--green-dark); background:var(--tag-bg);
+    padding:3px 9px; border-radius:20px; text-transform:uppercase; letter-spacing:.04em; margin-bottom:10px;
+  }
+  .team-card p{font-size:12.5px; color:var(--text-muted);}
+ 
+  /* --- 07 · Dúvidas: acordeão feito com <details>/<summary> do HTML,
+     sem precisar de JavaScript para abrir/fechar cada pergunta --- */
+  .faq{border-top:1px solid var(--line);}
+  .faq details{border-bottom:1px solid var(--line);}
+  .faq summary{
+    list-style:none; cursor:pointer; padding:20px 0; display:flex; justify-content:space-between;
+    align-items:center; gap:16px; font-family:var(--font-display); font-weight:600; font-size:15px;
+  }
+  .faq summary::-webkit-details-marker{display:none;} /* remove a setinha padrão do navegador (Safari) */
+  .faq summary::after{
+    content:"+"; color:var(--green); font-size:22px; font-weight:400; line-height:1; flex-shrink:0;
+  }
+  .faq details[open] summary::after{content:"–";} /* troca o "+" por "–" quando a pergunta está aberta */
+  .faq p{padding:0 0 20px; font-size:14px; color:var(--text-muted); max-width:70ch;}
+ 
+  /* --- Faixa de chamada para ação (CTA), antes do rodapé --- */
+  .cta-band{
+    background:var(--green-deep); border-radius:var(--radius); padding:56px 40px; text-align:center;
+    color:#fff; margin-top:88px;
+  }
+  .cta-band h2{font-family:var(--font-display); font-weight:800; text-transform:uppercase; font-size:clamp(20px,3vw,26px); margin-bottom:12px;}
+  .cta-band p{color:#cfe4cf; font-size:14.5px; max-width:500px; margin:0 auto 26px;}
+  .cta-band .btn{background:#fff; color:var(--green-deep);}
+  .cta-band .btn:hover{background:var(--cream); color:var(--green-deep);}
+ 
+  /* --- Rodapé --- */
+  footer{
+    margin-top:56px; /* espaço entre a faixa de CTA e o rodapé */
+    padding:44px 32px 90px; background:var(--ink); color:#8fa08f;
+    text-align:center; font-size:12.5px;
+  }
+  footer strong{color:#fff;}
+  footer .foot-meta{margin-top:10px; font-size:11.5px; color:#5f6d5f;}
+  footer a{color:#8fd18f;}
+ 
+  /* ===========================================================
+     RESPONSIVIDADE (telas menores)
+     =========================================================== */
+  @media (max-width: 860px){
+    /* tablets: estatísticas e time passam de 4/3 para 2 colunas */
+    .stat-grid{grid-template-columns:1fr 1fr;}
+    .team-grid{grid-template-columns:1fr 1fr;}
+  }
+  @media (max-width: 760px){
+    /* celulares: menu vira hambúrguer, grades viram 1 coluna */
+    .wrap{padding:0 20px;}
+    .navlinks, .nav-cta{display:none;}     /* esconde o menu e botão de desktop */
+    .navtoggle{display:block;}             /* mostra o botão hambúrguer */
+    nav.topnav .inner{padding:14px 20px;}
+    header.hero{padding:56px 20px 70px;}
+    section{padding-top:64px;}
+    .comp-grid, .team-grid, .goal-grid{grid-template-columns:1fr;}
+    .icon-grid{grid-template-columns:1fr 1fr;}
+    .hero-stats{gap:28px;}
+    .arrow{display:none;} /* remove a seta "→" entre os passos do processo */
+    .cycle-note{flex-direction:column; align-items:stretch;}
+    .cycle-step{flex-direction:row; align-items:center; text-align:left; gap:14px;} /* passos ficam em linha, lado a lado com o ícone */
+    .cycle-step strong, .cycle-step small{text-align:left; max-width:none;}
+    .cycle-step div.txt{display:flex; flex-direction:column;}
+    .card{padding:26px;}
+    .cta-band{padding:40px 24px;}
+  }
+  @media (prefers-reduced-motion: reduce){
+    /* respeita quem desativou animações no sistema operacional */
+    html{scroll-behavior:auto;}
+    *{transition:none !important;}
+  }
+</style>
+</head>
+<body>
+ 
+<!-- Link de acessibilidade: fica invisível até receber foco pelo Tab,
+     permitindo pular o menu e ir direto ao conteúdo principal. -->
+<a href="#conteudo" class="skip">Pular para o conteúdo</a>
+ 
+<!-- MENU DE NAVEGAÇÃO FIXO NO TOPO -->
+<nav class="topnav">
+  <div class="inner">
+    <div class="brand">
+      <!-- logo em SVG (desenhado em código, não é uma imagem) -->
+      <svg viewBox="0 0 100 100" fill="none" stroke="#4CAF50" stroke-width="3" aria-hidden="true">
+        <path d="M20 38 A30 30 0 0 1 76 22"/>
+        <path d="M70 16 L78 22 L70 30" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M80 62 A30 30 0 0 1 24 78"/>
+        <path d="M30 84 L22 78 L30 70" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M38 45 L62 45 L58 78 L42 78 Z" stroke="#ffffff"/>
+        <path d="M35 45 L65 45" stroke="#ffffff"/>
+        <path d="M45 45 L47 38 L53 38 L55 45" stroke="#ffffff"/>
+      </svg>
+      <span>Lixo <em>Eletrônico</em></span>
+    </div>
+    <!-- menu visível em telas grandes (escondido no mobile via CSS) -->
+    <div class="navlinks">
+      <a href="#problema">O Problema</a>
+      <a href="#funciona">Como Funciona</a>
+      <a href="#aceitamos">O Que Aceitamos</a>
+      <a href="#pev">Onde Fica</a>
+      <a href="#equipe">Equipe</a>
+      <a href="#duvidas">Dúvidas</a>
+    </div>
+    <a href="#pev" class="nav-cta">Ver o PEV</a>
+    <!-- botão hambúrguer: só some/aparece via CSS no mobile; o
+         comportamento de abrir/fechar o menu é feito no <script> no fim da página -->
+    <button class="navtoggle" id="navtoggle" aria-expanded="false" aria-controls="mobilemenu" aria-label="Abrir menu">
+      <svg viewBox="0 0 24 24"><line x1="3" y1="7" x2="21" y2="7"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="17" x2="21" y2="17"/></svg>
+    </button>
+  </div>
+  <!-- painel do menu mobile: começa escondido, ganha a classe "open" via JS -->
+  <div class="mobilemenu" id="mobilemenu">
+    <a href="#problema">O Problema</a>
+    <a href="#funciona">Como Funciona</a>
+    <a href="#aceitamos">O Que Aceitamos</a>
+    <a href="#pev">Onde Fica</a>
+    <a href="#metas">Metas</a>
+    <a href="#equipe">Equipe</a>
+    <a href="#duvidas">Dúvidas</a>
+  </div>
+</nav>
+ 
+<!-- HERO: primeira seção da página, com o título principal -->
+<header class="hero">
+  <div class="hero-inner">
+    <div class="eyebrow">CNEC · FACECA — Projeto Extensionista 2026</div>
+    <h1>Descarte <span>Correto</span> Hoje,<br>Preserve o Amanhã</h1>
+    <p class="lede">Um ponto fixo e seguro para entregar seus eletrônicos sem uso na FACECA — sem depender de mutirões sazonais nem de pontos distantes. Sua caixa antiga vira matéria-prima, não veneno para o solo.</p>
+    <div class="hero-actions">
+      <a href="#pev" class="btn">Onde descartar</a>
+      <a href="#funciona" class="btn outline">Como funciona</a>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat"><b>60kg</b><span>Meta de coleta</span></div>
+      <div class="hero-stat"><b>250+</b><span>Pessoas impactadas</span></div>
+      <div class="hero-stat"><b>4</b><span>Categorias de resíduo</span></div>
+    </div>
+  </div>
+</header>
+ 
+<!-- Conteúdo principal do site. O id="conteudo" é o destino do
+     link "Pular para o conteúdo" lá no topo. -->
+<main class="wrap" id="conteudo">
+ 
+  <!-- 01 · PROBLEMA: estatísticas da pesquisa de campo -->
+  <section id="problema">
+    <div class="kicker">01 · Diagnóstico</div>
+    <h2>O Problema é Real na Nossa Comunidade</h2>
+    <hr class="rule">
+    <p class="desc">Antes de propor a solução, ouvimos a comunidade. Uma pesquisa de campo com moradores de diferentes idades e profissões em Varginha revelou o tamanho do problema.</p>
+ 
+    <div class="stat-grid">
+      <div class="stat-card">
+        <b>100%</b>
+        <p>dos entrevistados dizem que a falta de informação dificulta o descarte correto</p>
+      </div>
+      <div class="stat-card">
+        <b>66,7%</b>
+        <p>têm eletrônicos sem uso guardados em casa, a maioria por apego emocional</p>
+      </div>
+      <div class="stat-card">
+        <b>5 de 6</b>
+        <p>nunca souberam onde levar um eletrônico para descarte correto</p>
+      </div>
+      <div class="stat-card">
+        <b>100%</b>
+        <p>usariam um ponto de coleta se ele existisse por perto</p>
+      </div>
+    </div>
+    <p class="source-note">Pesquisa de campo aplicada pelo grupo em Varginha (MG), 2026. Amostra exploratória de 6 respondentes.</p>
+  </section>
+ 
+  <!-- 02 · COMO FUNCIONA: os 4 passos do ciclo de logística reversa,
+       em ordem: descarte → coleta pela cooperativa → pesagem → destino final -->
+  <section id="funciona">
+    <div class="kicker">02 · Processo</div>
+    <h2>Como Funciona a Logística Reversa</h2>
+    <hr class="rule">
+    <p class="desc">Do seu gesto simples até a reinserção do material na indústria — um ciclo curto, rastreável e transparente.</p>
+ 
+    <div class="cycle-note">
+      <div class="cycle-step">
+        <div class="dot"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="7" r="3"/><path d="M2 21v-2a5 5 0 0 1 5-5h4a5 5 0 0 1 5 5v2"/></svg></div>
+        <div class="txt">
+          <strong>Você descarta</strong>
+          <small>Deposite o item no compartimento correto do coletor.</small>
+        </div>
+      </div>
+      <div class="arrow" aria-hidden="true">→</div>
+      <div class="cycle-step">
+        <div class="dot"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="9" width="12" height="8"/><path d="M14 12h4l3 3v2h-7z"/><circle cx="7" cy="19" r="1.6"/><circle cx="17" cy="19" r="1.6"/></svg></div>
+        <div class="txt">
+          <strong>Cooperativa recolhe</strong>
+          <small>O parceiro homologado dá a destinação final certificada.</small>
+        </div>
+      </div>
+      <div class="arrow" aria-hidden="true">→</div>
+      <div class="cycle-step">
+        <div class="dot"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12h18M6 12l3-8h6l3 8"/></svg></div>
+        <div class="txt">
+          <strong>Pesamos e triamos</strong>
+          <small>Cada retirada é pesada e registrada.</small>
+        </div>
+      </div>
+      <div class="arrow" aria-hidden="true">→</div>
+      <div class="cycle-step">
+        <div class="dot"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 0 0 18"/></svg></div>
+        <div class="txt">
+          <strong>O planeta agradece</strong>
+          <small>Metais voltam à indústria em vez de contaminar o solo.</small>
+        </div>
+      </div>
+    </div>
+  </section>
+ 
+  <!-- 03 · O QUE ACEITAMOS: categorias de material aceitas no coletor -->
+  <section id="aceitamos">
+    <div class="kicker">03 · Materiais</div>
+    <h2>O Que Você Pode Descartar</h2>
+    <hr class="rule">
+    <p class="desc">O coletor é compartimentado por categoria, facilitando a triagem e garantindo o descarte seguro de cada tipo de material.</p>
+ 
+    <div class="icon-grid">
+      <div class="icon-card">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="7" y="2" width="10" height="18" rx="2"/><line x1="11" y1="18" x2="13" y2="18"/></svg>
+        <span>Celulares</span>
+      </div>
+      <div class="icon-card">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h9l3 3v5H4z"/><circle cx="8" cy="18" r="1.6"/><circle cx="16" cy="18" r="1.6"/></svg>
+        <span>Carregadores e cabos</span>
+      </div>
+      <div class="icon-card">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="7" width="14" height="10" rx="1.5"/><rect x="10" y="4" width="4" height="3"/></svg>
+        <span>Pilhas e baterias</span>
+      </div>
+      <div class="icon-card">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16v9H4z"/><line x1="8" y1="19" x2="16" y2="19"/><line x1="12" y1="15" x2="12" y2="19"/></svg>
+        <span>Periféricos</span>
+      </div>
+    </div>
+ 
+    <div class="not-accepted">
+      <strong>Atenção:</strong> eletrodomésticos de grande porte (geladeiras, fogões, máquinas de lavar) não são aceitos no PEV. Lâmpadas e itens com risco de vazamento também ficam de fora. Consulte a coordenação do projeto para orientação sobre esses casos.
+    </div>
+  </section>
+ 
+  <!-- 04 · ONDE FICA: endereço com link para o Google Maps e a
+       tabela de horário de funcionamento -->
+  <section id="pev">
+    <div class="kicker">04 · Ponto de coleta</div>
+    <h2>Onde Fica o PEV</h2>
+    <hr class="rule">
+    <p class="desc">O Ponto de Entrega Voluntária fica instalado em área de grande circulação do campus, para que descartar seja parte da sua rotina — não um desvio de caminho.</p>
+ 
+    <div class="comp-grid">
+      <div class="card light">
+        <h3>Ponto de coleta</h3>
+        <p class="card-sub">Rua Professor Felipe Tiago Gomes, 173 – Vila Bueno, Varginha – MG, 37006-020</p>
+        <ul class="checklist">
+          <li><svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg> Acesso livre em horário de funcionamento</li>
+          <li><svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg> Compartimentos separados por tipo de material</li>
+          <li><svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg> Retirada e pesagem periódicas pela equipe do projeto</li>
+        </ul>
+        <a href="https://maps.app.goo.gl/hZhw8XZ5EPPCp9m29" target="_blank" rel="noopener" class="btn" style="margin-top:20px;">Ver no Google Maps</a>
+      </div>
+ 
+      <div class="card dark">
+        <h3>Horário de <span class="accent">funcionamento</span></h3>
+        <table class="hours" role="table">
+          <tbody>
+            <tr><th scope="row">Segunda-feira</th><td>08:00–22:00</td></tr>
+            <tr><th scope="row">Terça-feira</th><td>08:00–22:00</td></tr>
+            <tr><th scope="row">Quarta-feira</th><td>08:00–22:00</td></tr>
+            <tr><th scope="row">Quinta-feira</th><td>08:00–22:00</td></tr>
+            <tr><th scope="row">Sexta-feira</th><td>08:00–22:00</td></tr>
+            <tr class="closed"><th scope="row">Sábado</th><td>Fechado</td></tr>
+            <tr class="closed"><th scope="row">Domingo</th><td>Fechado</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+ 
+  <!-- 05 · METAS: números que o projeto quer alcançar até novembro -->
+  <section id="metas">
+    <div class="kicker">05 · Metas</div>
+    <h2>O Impacto Que Buscamos</h2>
+    <hr class="rule">
+    <p class="desc">Resultados concretos, medidos e reportados ao longo da vigência do projeto (agosto a novembro de 2026).</p>
+ 
+    <div class="goal-grid">
+      <div class="goal-card">
+        <div class="ring">60kg</div>
+        <h3>Resíduos coletados</h3>
+        <p>Meta mínima de arrecadação de REEE com destinação certificada.</p>
+      </div>
+      <div class="goal-card">
+        <div class="ring">250+</div>
+        <h3>Pessoas sensibilizadas</h3>
+        <p>Alunos, colaboradores e comunidade externa alcançados pela campanha.</p>
+      </div>
+      <div class="goal-card">
+        <div class="ring">1</div>
+        <h3>Parceria formalizada</h3>
+        <p>Cooperativa ou empresa homologada para coleta e destinação final.</p>
+      </div>
+    </div>
+  </section>
+ 
+  <!-- 06 · EQUIPE: um card por integrante do grupo multidisciplinar -->
+  <section id="equipe">
+    <div class="kicker">06 · Time</div>
+    <h2>Quem Está Por Trás do Projeto</h2>
+    <hr class="rule">
+    <p class="desc">Um grupo multidisciplinar, orientado pelo professor Otoniel da Silva Marques, unindo Engenharia de Produção, Engenharia Mecânica e Análise e Desenvolvimento de Sistemas.</p>
+ 
+    <div class="team-grid">
+      <div class="team-card">
+        <div class="team-avatar" aria-hidden="true">GA</div>
+        <h3>Gabriel Otávio Arantes Araújo</h3>
+        <span class="team-course">Eng. de Produção</span>
+        <p>Gestão das operações, dimensionamento logístico e contato com cooperativas.</p>
+      </div>
+      <div class="team-card">
+        <div class="team-avatar" aria-hidden="true">KO</div>
+        <h3>Kauã Victor Guimarães Olimpio</h3>
+        <span class="team-course">Eng. Mecânica</span>
+        <p>Projeto mecânico, ergonomia, seleção de materiais e fabricação do PEV.</p>
+      </div>
+      <div class="team-card">
+        <div class="team-avatar" aria-hidden="true">CR</div>
+        <h3>Cristian Robotta</h3>
+        <span class="team-course">Eng. Mecânica</span>
+        <p>Estruturação mecânica, triagem de componentes e segurança do armazenamento.</p>
+      </div>
+      <div class="team-card">
+        <div class="team-avatar" aria-hidden="true">LS</div>
+        <h3>Leandro Gabriel Silva</h3>
+        <span class="team-course">ADS</span>
+        <p>Planejamento e estruturação de conteúdo, além da criação de conteúdo para divulgação.</p>
+      </div>
+      <div class="team-card">
+        <div class="team-avatar" aria-hidden="true">G</div>
+        <h3>Gustavo Nascimento de Oliveira</h3>
+        <span class="team-course">ADS</span>
+        <p>Estrutura do site, esqueleto HTML, Design System, estilização CSS, componentes interativos e testes.</p>
+      </div>
+      <div class="team-card">
+        <div class="team-avatar" aria-hidden="true">MS</div>
+        <h3>Millena de Oliveira Silveira</h3>
+        <span class="team-course">ADS</span>
+        <p>Estrutura do site, esqueleto HTML, Design System, estilização CSS, componentes interativos e testes.</p>
+      </div>
+    </div>
+  </section>
+ 
+  <!-- 07 · DÚVIDAS (FAQ): usa <details>/<summary>, elementos nativos
+       do HTML que abrem e fecham sem precisar de JavaScript -->
+  <section id="duvidas">
+    <div class="kicker">07 · Dúvidas</div>
+    <h2>Perguntas Frequentes</h2>
+    <hr class="rule">
+    <p class="desc">O que a comunidade mais pergunta sobre o ponto de coleta.</p>
+ 
+    <div class="faq">
+      <details open>
+        <summary>Preciso ser aluno da FACECA para usar o PEV?</summary>
+        <p>Não. O ponto é aberto a toda a comunidade — alunos, colaboradores e moradores de Varginha. Basta chegar no horário de funcionamento da faculdade e depositar o material.</p>
+      </details>
+      <details>
+        <summary>Meus dados pessoais ficam no aparelho que eu descartar?</summary>
+        <p>A recomendação é apagar os dados e remover cartões de memória e chips antes do descarte. O projeto não acessa nem recupera conteúdo de nenhum dispositivo entregue, mas a limpeza prévia é responsabilidade de quem descarta.</p>
+      </details>
+      <details>
+        <summary>O que acontece com o material depois da coleta?</summary>
+        <p>A equipe pesa e separa o material por categoria, registra o volume em banco de dados e encaminha tudo para a cooperativa parceira, que faz a destinação final e a reinserção dos componentes na cadeia produtiva.</p>
+      </details>
+      <details>
+        <summary>Posso levar um monitor ou uma impressora?</summary>
+        <p>Itens desse porte não cabem no coletor. Nesses casos, procure a coordenação do projeto na faculdade para combinar a entrega diretamente com a cooperativa parceira.</p>
+      </details>
+      <details>
+        <summary>Por que não basta jogar o eletrônico no lixo comum?</summary>
+        <p>Eletrônicos contêm chumbo, mercúrio e cádmio. Em aterro comum, esses metais podem atingir o solo e os lençóis freáticos. Pela Política Nacional de Resíduos Sólidos, esse tipo de resíduo deve seguir um fluxo de logística reversa.</p>
+      </details>
+    </div>
+  </section>
+ 
+  <!-- FAIXA DE CTA (chamada final para ação), antes do rodapé -->
+  <div class="cta-band">
+    <h2>Seu Eletrônico Parado Pode Virar Recurso</h2>
+    <p>Leve seu material ao PEV da FACECA e ajude a evitar que metais pesados contaminem o solo e a água de Varginha.</p>
+    <a href="#pev" class="btn">Ver localização do PEV</a>
+  </div>
+ 
+</main>
+ 
+<footer>
+  <strong>Lixo Eletrônico e Logística Reversa</strong> — Projeto Extensionista CNEC-FACECA<br>
+  Descarte correto hoje, preserve o amanhã.
+  <div class="foot-meta">Orientador: Prof. Otoniel da Silva Marques · Cursos: Eng. de Produção, Eng. Mecânica, Análise e Desenvolvimento de Sistemas · Varginha, MG — 2026</div>
+</footer>
+ 
+<!-- JavaScript do site: só duas responsabilidades —
+     1) abrir/fechar o menu mobile
+     2) destacar no menu o link da seção que está visível na tela -->
+<script>
+  (function(){ // função autoexecutável: evita que as variáveis abaixo "vazem" para o escopo global
+ 
+    /* --- 1) MENU MOBILE (hambúrguer) --- */
+    var toggle = document.getElementById('navtoggle');
+    var menu = document.getElementById('mobilemenu');
+ 
+    // ao clicar no botão hambúrguer, alterna (mostra/esconde) o painel do menu
+    toggle.addEventListener('click', function(){
+      var open = menu.classList.toggle('open');
+      // atualiza os atributos de acessibilidade para leitores de tela
+      toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+      toggle.setAttribute('aria-label', open ? 'Fechar menu' : 'Abrir menu');
+    });
+ 
+    // ao clicar em qualquer link dentro do menu mobile, fecha o painel
+    // (senão o menu ficaria aberto cobrindo a tela após navegar)
+    menu.addEventListener('click', function(e){
+      if (e.target.tagName === 'A'){
+        menu.classList.remove('open');
+        toggle.setAttribute('aria-expanded','false');
+      }
+    });
+ 
+    /* --- 2) DESTAQUE DO LINK ATIVO NO MENU (scroll spy) ---
+       Observa quando cada seção entra na "zona central" da tela
+       e marca o link correspondente do menu desktop com a classe
+       "active" (estilizada em CSS com sublinhado verde). */
+    var links = Array.prototype.slice.call(document.querySelectorAll('.navlinks a'));
+    // para cada link do menu, encontra a seção que ele aponta (pelo href="#id")
+    var sections = links.map(function(a){ return document.querySelector(a.getAttribute('href')); });
+ 
+    if ('IntersectionObserver' in window){ // proteção para navegadores muito antigos
+      var obs = new IntersectionObserver(function(entries){
+        entries.forEach(function(entry){
+          if (entry.isIntersecting){
+            var i = sections.indexOf(entry.target);
+            // remove "active" de todos os links e adiciona só no correspondente
+            links.forEach(function(l, j){ l.classList.toggle('active', i === j); });
+          }
+        });
+      }, { rootMargin: '-40% 0px -55% 0px' }); // considera "visível" só a faixa central da tela
+      sections.forEach(function(s){ if (s) obs.observe(s); });
+    }
+  })();
+</script>
+ 
+</body>
+</html>
+ 
