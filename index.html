@@ -201,10 +201,15 @@
   }
   .cycle-step{display:flex; flex-direction:column; align-items:center; gap:10px; flex:1; min-width:120px;}
   .cycle-step .dot{
-    width:56px; height:56px; border-radius:50%; background:var(--cream);
+    width:56px; height:56px; min-width:56px; min-height:56px; /* tamanho fixo: nunca vira oval */
+    flex:0 0 56px; aspect-ratio:1/1; border-radius:50%; background:var(--cream);
     display:flex; align-items:center; justify-content:center; border:2px solid var(--green);
+    box-sizing:border-box; padding:0;
   }
-  .cycle-step .dot svg{width:24px; height:24px; stroke:var(--green); fill:none; stroke-width:1.7;}
+  .cycle-step .dot svg{
+    width:24px; height:24px; flex:0 0 24px; max-width:none; display:block;
+    stroke:var(--green); fill:none; stroke-width:1.7; stroke-linecap:round; stroke-linejoin:round;
+  }
   .cycle-step strong{
     font-family:var(--font-display); font-size:11px; font-weight:700; text-transform:uppercase;
     text-align:center; color:var(--text-dark); letter-spacing:.03em;
@@ -404,8 +409,7 @@
     .stat-card b{font-size:30px;}
     .arrow{display:none;} /* remove a seta "→" entre os passos do processo */
     .cycle-note{flex-direction:column; align-items:stretch; padding:22px; gap:22px;}
-    .cycle-step{flex-direction:row; align-items:center; text-align:left; gap:14px; min-width:0;} /* passos ficam em linha, ao lado do ícone */
-    .cycle-step .dot{flex-shrink:0;}
+    .cycle-step{flex:0 0 auto; flex-direction:row; align-items:center; text-align:left; gap:14px; min-width:0;} /* passos ficam em linha, ao lado do ícone */
     .cycle-step strong, .cycle-step small{text-align:left; max-width:none;}
     .cycle-step div.txt{display:flex; flex-direction:column; gap:2px;}
     .icon-card span{font-size:10.5px;}
@@ -563,7 +567,7 @@
  
     <div class="cycle-note">
       <div class="cycle-step">
-        <div class="dot"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="7" r="3"/><path d="M2 21v-2a5 5 0 0 1 5-5h4a5 5 0 0 1 5 5v2"/></svg></div>
+        <div class="dot"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="7.5" r="3.5"/><path d="M5 20v-1a5 5 0 0 1 5-5h4a5 5 0 0 1 5 5v1"/></svg></div>
         <div class="txt">
           <strong>Você descarta</strong>
           <small>Deposite o item no compartimento correto do coletor.</small>
@@ -571,7 +575,7 @@
       </div>
       <div class="arrow" aria-hidden="true">→</div>
       <div class="cycle-step">
-        <div class="dot"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="9" width="12" height="8"/><path d="M14 12h4l3 3v2h-7z"/><circle cx="7" cy="19" r="1.6"/><circle cx="17" cy="19" r="1.6"/></svg></div>
+        <div class="dot"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="5.5" width="12" height="9"/><path d="M14.5 8.5h4l3 3v3h-7z"/><circle cx="7.5" cy="17" r="2"/><circle cx="17.5" cy="17" r="2"/></svg></div>
         <div class="txt">
           <strong>Cooperativa recolhe</strong>
           <small>O parceiro homologado dá a destinação final certificada.</small>
@@ -579,7 +583,7 @@
       </div>
       <div class="arrow" aria-hidden="true">→</div>
       <div class="cycle-step">
-        <div class="dot"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12h18M6 12l3-8h6l3 8"/></svg></div>
+        <div class="dot"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 18.5h12l2-10H4z"/><path d="M9 8.5a3 3 0 0 1 6 0"/></svg></div>
         <div class="txt">
           <strong>Pesamos e triamos</strong>
           <small>Cada retirada é pesada e registrada.</small>
